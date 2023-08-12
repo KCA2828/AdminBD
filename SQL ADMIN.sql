@@ -50,7 +50,7 @@ CREATE TABLE Citas (
    FOREIGN KEY (idProcedimiento) REFERENCES Procedimientos(idProcedimiento)
 ) TABLESPACE TS_CITAS;
 
--- Creaci√≥n de √çndices
+-- Creaci√≥n de √?ndices
 CREATE INDEX IDX_NOMBRE_PROCEDIMIENTO ON Procedimientos(nombre) TABLESPACE TS_PROCEDIMIENTOS;
 CREATE INDEX IDX_NOMBRE_DENTISTA ON Dentistas(nombre) TABLESPACE TS_DENTISTAS;
 CREATE INDEX IDX_NOMBRE_PACIENTE ON Pacientes(nombre) TABLESPACE TS_PACIENTES;
@@ -126,3 +126,53 @@ VALUES (4, 4, 4, 5, TO_DATE('2023-08-22', 'YYYY-MM-DD'), 'Blanqueamiento dental'
 INSERT INTO Citas (idCita, idPaciente, idDentista, idProcedimiento, fechaCita, motivo, costo)
 VALUES (5, 5, 5, 4, TO_DATE('2023-08-25', 'YYYY-MM-DD'), 'Consulta de ortodoncia', 2000.00);
 
+
+-- Recuperar todos los procedimientos
+SELECT * FROM Procedimientos;
+
+-- Recuperar todos los dentistas
+SELECT * FROM Dentistas;
+
+-- Recuperar todos los pacientes
+SELECT * FROM Pacientes;
+
+-- Recuperar todas las citas
+SELECT * FROM Citas;
+
+-- Recuperar citas para un paciente especÌfico
+SELECT * FROM Citas WHERE idPaciente = <id_paciente>;
+
+-- Recuperar citas para un dentista especÌfico
+SELECT * FROM Citas WHERE idDentista = <id_dentista>;
+
+-- Recuperar citas para un procedimiento especÌfico
+SELECT * FROM Citas WHERE idProcedimiento = <id_procedimiento>;
+
+-- Recuperar citas dentro de un rango de fechas
+SELECT * FROM Citas WHERE fechaCita BETWEEN TO_DATE('<fecha_inicio>', 'YYYY-MM-DD') AND TO_DATE('<fecha_fin>', 'YYYY-MM-DD');
+
+-- Recuperar el costo total de procedimientos para un paciente especÌfico
+SELECT idPaciente, SUM(costo) AS costo_total
+FROM Citas
+WHERE idPaciente = <id_paciente>
+GROUP BY idPaciente;
+
+-- Recuperar el procedimiento m·s costoso
+SELECT MAX(costo) AS max_costo
+FROM Procedimientos;
+
+-- Crear el usuario administrador
+CREATE USER admin IDENTIFIED BY admin_password;
+GRANT CONNECT, RESOURCE, DBA TO admin;
+
+-- Crear el usuario doctor
+CREATE USER doctor IDENTIFIED BY doctor_password;
+GRANT CONNECT, RESOURCE TO doctor;
+
+-- Crear el usuario cliente
+CREATE USER cliente IDENTIFIED BY cliente_password;
+GRANT CONNECT TO cliente;
+
+/*El usuario admin tiene roles CONNECT, RESOURCE y DBA, lo que le da acceso completo a la base de datos y privilegios de administraciÛn.
+El usuario doctor tiene roles CONNECT y RESOURCE, lo que le proporciona un acceso general a la base de datos y la capacidad de trabajar con recursos.
+El usuario cliente solo tiene el rol CONNECT, lo que le permite conectarse a la base de datos.*/

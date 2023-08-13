@@ -192,15 +192,24 @@ SQL> CONNECT /AS SYSDBA;
 SQL> STARTUP
 SQL> EXIT
 -- RESPALDOS CON EXPDP E IMPDP
+-- En el CMD
+C:\Users\kenne>SQL PLUS /NOLOG
 SQL> CONNECT /AS SYSDBA;
 SQL>CREATE DIRECTORY BACKUPPROYECTO AS  ‘C:\RESPALDO’;
 SQL>GRANT WRITE ON DIRECTORY BACKUPPROYECTO TO SYSTEM;
 SQL>EXIT
-CREATE TABLE COPIA AS SELECT * FROM Procedimientos;(EN SQL DEVELOPER)
+--En SqlDeveloper con el siguiente comando damos permisos para poder hacer una exportacion o importacion completa:
+GRANT EXP_FULL_DATABASE TO SYSTEM;
+GRANT IMP_FULL_DATABASE TO SYSTEM;
+CREATE TABLE COPIA AS SELECT * FROM Procedimientos;
+--Exportamos la tabla  con el siguiente comando:
+C:\> EXPDP SYSTEM/root directory=BACKUPPROYECTO dumpfile=COPIAS.DMP tables=SYSTEM.Procedimientos
+--Ó tambien podemos exportamos la base con el siguiente comando:
 C:\> EXPDP SYSTEM/root directory=BACKUPPROYECTO dumpfile=SYSTEM.DMP SCHEMAS=SYSTEM
- GRANT EXP_FULL_DATABASE TO HR;
- GRANT IMP_FULL_DATABASE TO HR;
---Borramos la tabla ejemplo en SqlDeveloper con el siguiente comando:
+--Borramos la tabla en SqlDeveloper con el siguiente comando:
 drop table Procedimientos;
---Importamos la tabla Procedimientos con el siguiente comando:
+--Importamos la tabla  con el siguiente comando:
+C:\> IMPDP SYSTEM/root directory=BACKUPPROYECTO dumpfile=COPIAS.DMP tables=SYSTEM.Procedimientos
+--Ó importamos la base con el siguiente comando:
 C:\> IMPDP SYSTEM/root directory=BACKUPPROYECTO dumpfile=SYSTEM.DMP SCHEMAS=SYSTEM
+-- RESPALDOS EN CALIENTE
